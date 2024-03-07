@@ -1,0 +1,106 @@
+create database HR;
+use hr;
+
+drop table allemployee;
+
+create table AllEmployee(
+	사원코드 char(9) primary key,
+    사원명 varchar(8) not null,
+    근무 int(20) default 0,
+    출근 int(20) default 0,
+    출장 int(20) default 0,
+    외근 int(20) default 0,
+    휴가 int(20) default 0,
+    월차 int(20) default 0,
+    반차 int(20) default 0,
+    지각 int(20) default 0,
+    조퇴 int(20) default 0,
+    결근 int(20) default 0
+);
+
+insert into AllEmployee(사원코드, 사원명) values("2017MN001","김민아");
+
+-- 근무 넣기
+UPDATE allemployee
+SET 근무 = (
+    SELECT count(상태)
+    FROM 2017MN001
+    WHERE 상태 IN ('출근', '외근', '출장')
+)
+WHERE 사원코드 = '2017MN001';
+
+-- 출근 넣기
+UPDATE allemployee
+SET 출근 = (
+    SELECT count(상태)
+    FROM 2017MN001
+    WHERE 상태 = '출근'
+)
+WHERE 사원코드 = '2017MN001';
+
+-- 출장 넣기
+UPDATE allemployee
+SET 출장 = (
+    SELECT count(상태)
+    FROM 2017MN001
+    WHERE 상태 = '출장'
+)
+WHERE 사원코드 = '2017MN001';
+
+-- 외근 넣기
+UPDATE allemployee
+SET 외근 = (
+    SELECT count(상태)
+    FROM 2017MN001
+    WHERE 상태 = '외근'
+)
+WHERE 사원코드 = '2017MN001';
+
+-- 휴가
+UPDATE allemployee
+SET 휴가 = (
+    SELECT count(상태)
+    FROM 2017MN001
+    WHERE 상태 = '휴가'
+)
+WHERE 사원코드 = '2017MN001';
+
+-- 월차
+UPDATE allemployee
+SET 월차 = (
+    SELECT count(상태)
+    FROM 2017MN001
+    WHERE 상태 = '월차'
+)
+WHERE 사원코드 = '2017MN001';
+
+select * from allemployee;
+
+drop table 2017mn001;
+
+SET @table_name = '2017MN001';
+SET @sql = CONCAT('CREATE TABLE ', @table_name, ' (
+    날짜 DATE PRIMARY KEY ,
+    사원명 varchar(8) not null,
+    출근시간 TIME,
+    퇴근시간 TIME,
+    상태 varchar(5)
+);');
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+show tables;
+
+select * from allemployee;
+
+
+insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-01", (select 사원명 from AllEmployee where 사원코드 = "2017MN001"),'출근');
+insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-02", (select 사원명 from AllEmployee where 사원코드 = "2017MN001"),'외근');
+insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-03", (select 사원명 from AllEmployee where 사원코드 = "2017MN001"),'외근');
+insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-04", (select 사원명 from AllEmployee where 사원코드 = "2017MN001"),'조퇴');
+insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-05", (select 사원명 from AllEmployee where 사원코드 = "2017MN001"),'지각');
+insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-06", (select 사원명 from AllEmployee where 사원코드 = "2017MN001"),'출장');
+
+select * from 2017mn001;
+
