@@ -102,5 +102,5 @@ insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-04", (select �
 insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-05", (select 사원명 from AllEmployee where 사원코드 = "2017MN001"),'지각');
 insert into 2017MN001 (날짜, 사원명, 상태)values ("2024-03-06", (select 사원명 from AllEmployee where 사원코드 = "2017MN001"),'출장');
 
-select * from 2017mn001;
+select * from 2017mn001; -- 개별 사원 근태 기록 사원코드(테이블명)로 찾기
 
