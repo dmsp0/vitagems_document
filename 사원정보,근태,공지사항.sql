@@ -63,7 +63,14 @@ CREATE TABLE announcement (
     FOREIGN KEY (author_id) REFERENCES HRInformation (employeeCode)
 );
 
--- admin만 작성,삭제,수정등의 권한 제약조건
-ALTER TABLE announcement ADD CONSTRAINT chk_author_id CHECK (author_id IN (SELECT employeeCode FROM HRInformation WHERE authority = 'admin'));
-
-
+-- admin만 작성,삭제,수정등의 권한 제약조건 (제약조건 생성할때 다른테이블을 참조할수없어서 트리거로 변경)
+DELIMITER //
+CREATE TRIGGER chk_author_id BEFORE INSERT ON announcement
+FOR EACH ROW
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM HRInformation WHERE employeeCode = NEW.authorid AND authority = 'admin') THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '관리자만 작성 할 수 있습니다.';
+    END IF;
+END;
+//
+DELIMITER ;
