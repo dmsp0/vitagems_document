@@ -1,4 +1,4 @@
--- DB 생성
+
 drop database if exists HRDB;
 create database HRDB;
 use HRDB;
@@ -56,7 +56,6 @@ END;
 
 DELIMITER ;
 
-
 -- (회의)
 -- 전화번호 같은것은 저장못하는 제약조건
 ALTER TABLE HRInformation ADD UNIQUE INDEX idx_unique_PhoneNum (PhoneNum);
@@ -113,19 +112,28 @@ drop trigger if exists after_attendance_insert;
 
 
 -- 날짜별 근태 table에 insert 발생시 사원별 근태 table에서 기존 사원의 근무 통계를 업데이트하는 트리거.
+DROP TRIGGER IF EXISTS after_attendance_insert;
 DELIMITER //
+
 CREATE TRIGGER after_attendance_insert
 AFTER INSERT ON attendance
 FOR EACH ROW
 BEGIN
+    DECLARE leaveAmount DECIMAL(5,1); -- 반차일 경우 휴가 사용량
+
+    IF NEW.status = 'halfDayLeave' THEN
+        SET leaveAmount = 0.5;
+    ELSE
+        SET leaveAmount = 1.0;
+    END IF;
+
     UPDATE totalattendance
-    SET totalWorkCount = totalWorkCount + IF(NEW.status IN ('attendance', 'businesstrip', 'outsideWork','lateness','earlyLeave'), 1, 0),
+    SET totalWorkCount = totalWorkCount + IF(NEW.status IN ('attendance', 'businesstrip', 'outsideWork', 'lateness', 'earlyLeave'), 1, 0),
         attendanceCount = attendanceCount + IF(NEW.status = 'attendance', 1, 0),
         businesstripCount = businesstripCount + IF(NEW.status = 'businesstrip', 1, 0),
         outsideWorkCount = outsideWorkCount + IF(NEW.status = 'outsideWork', 1, 0),
-        Vacation = Vacation + IF(NEW.status IN ('montlyLeave'), 1, 0),
-        Vacation = Vacation + IF(NEW.status IN ('halfDayLeave'), 0.5, 0),
-        montlyLeave = montlyLeave + IF(NEW.status = 'montlyLeave', 1, 0),
+        Vacation = Vacation + IF(NEW.status IN ('monthlyLeave', 'halfDayLeave'), leaveAmount, 0),
+        montlyLeave = montlyLeave + IF(NEW.status = 'monthlyLeave', 1, 0),
         halfDayLeave = halfDayLeave + IF(NEW.status = 'halfDayLeave', 1, 0),
         lateness = lateness + IF(NEW.status = 'lateness', 1, 0),
         earlyLeave = earlyLeave + IF(NEW.status = 'earlyLeave', 1, 0),
@@ -133,6 +141,7 @@ BEGIN
     WHERE employeeCode = NEW.employeeCode;
 END;
 //
+
 DELIMITER ;
 
 -- 공지사항(announcement) 테이블 작성
