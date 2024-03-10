@@ -9,7 +9,7 @@ CREATE TABLE HRInformation (
     birthday DATE NOT NULL, -- 생년월일
     phoneNum VARCHAR(20) NOT NULL, -- 전화번호
     department ENUM('MK', 'MN', 'DV') NOT NULL, -- 부서
-    employeeRank VARCHAR(50) NOT NULL, -- 직급
+    employeeRank ENUM('사원', '대리','과장','차장','부장') NOT NULL, -- 직급
     joinDate DATE NOT NULL, -- 입사일
     employeepassword VARCHAR(100),
     gender ENUM('남', '여') NOT NULL,
