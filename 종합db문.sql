@@ -56,9 +56,6 @@ END;
 
 DELIMITER ;
 
--- (회의)
--- employeeRank에 제약조건 추가 'B', 'S', 'G', 'P', 'D'
-ALTER TABLE HRInformation ADD CONSTRAINT chk_employeeRank CHECK (employeeRank IN ('B', 'S', 'G', 'P', 'D'));
 
 -- (회의)
 -- 전화번호 같은것은 저장못하는 제약조건
