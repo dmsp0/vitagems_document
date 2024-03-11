@@ -66,7 +66,7 @@ CREATE TABLE attendance (
     date DATE NOT NULL,
     arrivalTime TIME,
     departureTime TIME,
-    status ENUM('businesstrip', 'attendance', 'outsideWork', 'montlyLeave', 'halfDayLeave','lateness','earlyLeave','absence') NOT NULL,
+    status ENUM('businesstrip', 'attendance', 'outsideWork', 'monthlyLeave', 'halfDayLeave','lateness','earlyLeave','absence'),
     PRIMARY KEY (employeeCode, date), -- (회의)
     FOREIGN KEY (employeeCode) REFERENCES HRInformation (employeeCode)
 );
@@ -79,8 +79,8 @@ CREATE TABLE totalattendance (
     attendanceCount INT(20) DEFAULT 0,
     businesstripCount INT(20) DEFAULT 0,
     outsideWorkCount INT(20) DEFAULT 0,
-    Vacation INT(20) DEFAULT 0,
-    montlyLeave INT(20) DEFAULT 0,
+    Vacation double(2,1) DEFAULT 0.0,
+    monthlyLeave INT(20) DEFAULT 0,
     halfDayLeave INT(20) DEFAULT 0,
     lateness INT(20) DEFAULT 0,
     earlyLeave INT(20) DEFAULT 0,
@@ -96,7 +96,7 @@ AFTER INSERT ON HRInformation
 FOR EACH ROW
 BEGIN
 	IF NOT EXISTS (SELECT * FROM totalattendance WHERE employeeCode = NEW.employeeCode)THEN
-        INSERT INTO totalattendance (employeeCode, employeeName, totalWorkCount, attendanceCount, businesstripCount, outsideWorkCount, Vacation, montlyLeave, halfDayLeave, lateness, earlyLeave, absence)
+        INSERT INTO totalattendance (employeeCode, employeeName, totalWorkCount, attendanceCount, businesstripCount, outsideWorkCount, Vacation, monthlyLeave, halfDayLeave, lateness, earlyLeave, absence)
         SELECT NEW.employeeCode, employeeName, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 FROM HRInformation WHERE employeeCode = NEW.employeeCode;
     END IF;
     END;
@@ -133,7 +133,7 @@ BEGIN
         businesstripCount = businesstripCount + IF(NEW.status = 'businesstrip', 1, 0),
         outsideWorkCount = outsideWorkCount + IF(NEW.status = 'outsideWork', 1, 0),
         Vacation = Vacation + IF(NEW.status IN ('monthlyLeave', 'halfDayLeave'), leaveAmount, 0),
-        montlyLeave = montlyLeave + IF(NEW.status = 'monthlyLeave', 1, 0),
+        monthlyLeave = monthlyLeave + IF(NEW.status = 'monthlyLeave', 1, 0),
         halfDayLeave = halfDayLeave + IF(NEW.status = 'halfDayLeave', 1, 0),
         lateness = lateness + IF(NEW.status = 'lateness', 1, 0),
         earlyLeave = earlyLeave + IF(NEW.status = 'earlyLeave', 1, 0),
