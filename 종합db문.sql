@@ -151,6 +151,7 @@ CREATE TABLE announcement (
     noticeid INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
+    category ENUM('업무', '인사','이벤트'),
     authorid VARCHAR(20) NOT NULL,
     publishdate DATETIME NOT NULL,
     img LONGBLOB,
