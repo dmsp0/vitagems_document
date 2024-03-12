@@ -11,7 +11,7 @@ CREATE TABLE HRInformation (
     department ENUM('MK', 'MN', 'DV') NOT NULL, -- 부서
     employeeRank ENUM('사원', '대리','과장','차장','부장') NOT NULL, -- 직급
     joinDate DATE NOT NULL, -- 입사일
-    employeepassword VARCHAR(100),
+    employeepassword VARCHAR(100) NOT NULL,
     gender ENUM('남', '여') NOT NULL,
     address VARCHAR(255),
     bankAccountNum VARCHAR(100),
