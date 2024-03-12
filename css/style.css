@@ -10,7 +10,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #1aa3c5;
+    background-color: #5c8ae0;
     background-size: cover;
 }
 
@@ -21,13 +21,19 @@ body::before{
     background-color: rgba(0, 0, 0, .5);
 }
 
+#companyName{
+    color: #fff;
+    font-size: 20px;
+    font-weight: 100;
+}
+
 .login-form{
     position: relative;
     z-index: 2;
 }
 
 .login-form h1{
-    font-size: 32px; color: #fff;
+    font-size: 36px; color: #fff;
     text-align: center;
     margin-bottom: 60px;
 }
