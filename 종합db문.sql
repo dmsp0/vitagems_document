@@ -79,7 +79,7 @@ CREATE TABLE totalattendance (
     attendanceCount INT(20) DEFAULT 0,
     businesstripCount INT(20) DEFAULT 0,
     outsideWorkCount INT(20) DEFAULT 0,
-    Vacation double(2,1) DEFAULT 0.0,
+    vacation double(2,1) DEFAULT 0.0,
     monthlyLeave INT(20) DEFAULT 0,
     halfDayLeave INT(20) DEFAULT 0,
     lateness INT(20) DEFAULT 0,
