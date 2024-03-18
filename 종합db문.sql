@@ -64,8 +64,8 @@ ALTER TABLE HRInformation ADD UNIQUE INDEX idx_unique_PhoneNum (PhoneNum);
 CREATE TABLE attendance (
     employeeCode VARCHAR(20) NOT NULL,
     date DATE NOT NULL,
-    arrivalTime TIME,
-    departureTime TIME,
+    startTimeForWork TIME, -- 출근시간
+    endTimeForWork TIME, -- 퇴근시간
     status ENUM('businesstrip', 'attendance', 'outsideWork', 'monthlyLeave', 'halfDayLeave','lateness','earlyLeave','absence'),
     PRIMARY KEY (employeeCode, date), -- (회의)
     FOREIGN KEY (employeeCode) REFERENCES HRInformation (employeeCode)
@@ -175,4 +175,3 @@ select * from attendance;
 select * from hrinformation;
 select * from totalattendance;
 select * from announcement;
-
