@@ -47,7 +47,7 @@ INSERT INTO attendance VALUES
 ('2023DV001', '2024-03-29', '08:00:00', '17:00:00', 'attendance'); -- 금 출근
 
 -- 변의성 3월 1일부터 3월 31일까지의 출퇴근 데이터 (주말 및 공휴일 제외)
-INSERT INTO attendance (employeeCode, date, arrivalTime, departureTime, status) VALUES
+INSERT INTO attendance VALUES
 ('2023DV002', '2024-03-01', '08:00:00', '17:00:00', 'attendance'),
 -- 3월 2일과 3일은 주말로 가정
 ('2023DV002', '2024-03-04', '08:00:00', '17:00:00', 'attendance'),
@@ -175,7 +175,7 @@ INSERT INTO attendance VALUES
 ('2023MK001', '2024-03-29', '08:10:00', '17:04:00', 'attendance'); -- 금 출근
 
 -- 송지훈 3월 1일부터 3월 31일까지의 출퇴근 데이터 (주말 및 공휴일 제외)
-INSERT INTO attendance (employeeCode, date, arrivalTime, departureTime, status) VALUES
+INSERT INTO attendance VALUES
 ('2023MN003', '2024-03-01', '08:00:00', '17:00:00', 'attendance'),
 -- 3월 2일과 3일은 주말로 가정
 ('2023MN003', '2024-03-04', '08:00:00', '17:00:00', 'attendance'),
@@ -205,7 +205,7 @@ INSERT INTO attendance (employeeCode, date, arrivalTime, departureTime, status) 
 
 
 -- 김하늘 3월 1일부터 3월 31일까지의 출퇴근 데이터 (주말 및 공휴일 제외, 다양한 status 값 포함)
-INSERT INTO attendance (employeeCode, date, arrivalTime, departureTime, status) VALUES
+INSERT INTO attendance VALUES
 ('2023DV004', '2024-03-01', '08:00:00', '17:00:00', 'attendance'),
 -- 3월 2일과 3일은 주말로 가정
 ('2023DV004', '2024-03-04', '08:00:00', '17:00:00', 'attendance'),
@@ -235,7 +235,7 @@ INSERT INTO attendance (employeeCode, date, arrivalTime, departureTime, status) 
 
 
 -- 이승현 3월 1일부터 3월 31일까지의 출퇴근 데이터 (주말 및 공휴일 제외, 월차 3회 및 반차 1회 포함)
-INSERT INTO attendance (employeeCode, date, arrivalTime, departureTime, status) VALUES
+INSERT INTO attendance  VALUES
 ('2023MK002', '2024-03-01', '08:00:00', '17:00:00', 'attendance'),
 -- 3월 2일과 3일은 주말로 가정
 ('2023MK002', '2024-03-04', '08:00:00', '17:00:00', 'attendance'),
@@ -316,7 +316,7 @@ INSERT INTO attendance VALUES
 
 
 -- 김지아의 출퇴근 내역
-INSERT INTO attendance VALUES
+INSERT INTO attendance  VALUES
 ('2023MK003', '2024-03-01', '08:00:00', '17:00:00', 'attendance'), -- 출근
 ('2023MK003', '2024-03-04', '08:00:00', '17:00:00', 'attendance'), -- 출근
 ('2023MK003', '2024-03-05', '08:15:00', '17:00:00', 'attendance'), -- 출근
