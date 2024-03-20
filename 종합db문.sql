@@ -175,3 +175,4 @@ select * from attendance;
 select * from hrinformation;
 select * from totalattendance;
 select * from announcement;
+
