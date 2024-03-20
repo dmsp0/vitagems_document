@@ -66,7 +66,7 @@ CREATE TABLE attendance (
     date DATE NOT NULL,
     startTimeForWork TIME, -- 출근시간
     endTimeForWork TIME, -- 퇴근시간
-    status ENUM('businesstrip', 'attendance', 'outsideWork', 'monthlyLeave', 'halfDayLeave','lateness','earlyLeave','absence'),
+    status ENUM('출장', '출근', '외근', '월차', '반차','지각','조퇴','결근'),
     PRIMARY KEY (employeeCode, date), -- (회의)
     FOREIGN KEY (employeeCode) REFERENCES HRInformation (employeeCode)
 );
@@ -128,16 +128,16 @@ BEGIN
     END IF;
 
     UPDATE totalattendance
-    SET totalWorkCount = totalWorkCount + IF(NEW.status IN ('attendance', 'businesstrip', 'outsideWork', 'lateness', 'earlyLeave'), 1, 0),
-        attendanceCount = attendanceCount + IF(NEW.status = 'attendance', 1, 0),
-        businesstripCount = businesstripCount + IF(NEW.status = 'businesstrip', 1, 0),
-        outsideWorkCount = outsideWorkCount + IF(NEW.status = 'outsideWork', 1, 0),
-        Vacation = Vacation + IF(NEW.status IN ('monthlyLeave', 'halfDayLeave'), leaveAmount, 0),
-        monthlyLeave = monthlyLeave + IF(NEW.status = 'monthlyLeave', 1, 0),
-        halfDayLeave = halfDayLeave + IF(NEW.status = 'halfDayLeave', 1, 0),
-        lateness = lateness + IF(NEW.status = 'lateness', 1, 0),
-        earlyLeave = earlyLeave + IF(NEW.status = 'earlyLeave', 1, 0),
-        absence = absence + IF(NEW.status = 'absence', 1, 0)
+    SET totalWorkCount = totalWorkCount + IF(NEW.status IN ('출근', '출장', '외근', '지각', '조퇴'), 1, 0),
+        attendanceCount = attendanceCount + IF(NEW.status = '출근', 1, 0),
+        businesstripCount = businesstripCount + IF(NEW.status = '출장', 1, 0),
+        outsideWorkCount = outsideWorkCount + IF(NEW.status = '외근', 1, 0),
+        Vacation = Vacation + IF(NEW.status IN ('월차', '반차'), leaveAmount, 0),
+        monthlyLeave = monthlyLeave + IF(NEW.status = '월차', 1, 0),
+        halfDayLeave = halfDayLeave + IF(NEW.status = '반차', 1, 0),
+        lateness = lateness + IF(NEW.status = '지각', 1, 0),
+        earlyLeave = earlyLeave + IF(NEW.status = '조퇴', 1, 0),
+        absence = absence + IF(NEW.status = '결근', 1, 0)
     WHERE employeeCode = NEW.employeeCode;
 END;
 //
