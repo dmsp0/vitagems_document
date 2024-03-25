@@ -66,7 +66,7 @@ CREATE TABLE attendance (
     date DATE NOT NULL,
     startTimeForWork TIME, -- 출근시간
     endTimeForWork TIME, -- 퇴근시간
-    status ENUM('출장', '출근', '외근', '월차', '반차','지각','조퇴','결근'),
+    status ENUM('출장', '출근', '외근', '월차', '반차','지각','조퇴','결근','NULL'),
     PRIMARY KEY (employeeCode, date), -- (회의)
     FOREIGN KEY (employeeCode) REFERENCES HRInformation (employeeCode)
 );
@@ -170,6 +170,129 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+drop trigger after_attendance_insert;
+drop trigger after_attendance_update;
+
+DELIMITER //
+
+CREATE TRIGGER after_attendance_insert
+AFTER INSERT ON attendance
+FOR EACH ROW
+BEGIN
+    DECLARE total_work_count INT DEFAULT 0;
+    DECLARE attendance_count INT DEFAULT 0;
+    DECLARE businesstrip_count INT DEFAULT 0;
+    DECLARE outsidework_count INT DEFAULT 0;
+    DECLARE vacation_count DOUBLE DEFAULT 0.0;
+    DECLARE monthly_leave_count INT DEFAULT 0;
+    DECLARE half_day_leave_count INT DEFAULT 0;
+    DECLARE lateness_count INT DEFAULT 0;
+    DECLARE early_leave_count INT DEFAULT 0;
+    DECLARE absence_count INT DEFAULT 0;
+
+    -- attendance 테이블에서 각 상태의 개수를 계산
+    SELECT 
+        SUM(CASE WHEN status = '출근' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '출장' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '외근' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '월차' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '반차' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '지각' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '조퇴' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '결근' THEN 1 ELSE 0 END)
+    INTO
+        attendance_count,
+        businesstrip_count,
+        outsidework_count,
+        monthly_leave_count,
+        half_day_leave_count,
+        lateness_count,
+        early_leave_count,
+        absence_count
+    FROM attendance
+    WHERE employeeCode = NEW.employeeCode;
+
+    SET total_work_count =  attendance_count + businesstrip_count + outsidework_count +early_leave_count +lateness_count;
+    SET vacation_count = monthly_leave_count + half_day_leave_count/2;
+
+    -- totalattendance 테이블 업데이트
+    UPDATE totalattendance
+    SET
+        totalWorkCount = total_work_count,
+        attendanceCount = attendance_count,
+        businesstripCount = businesstrip_count,
+        outsideWorkCount = outsidework_count,
+        vacation = vacation_count,
+        monthlyLeave = monthly_leave_count,
+        halfDayLeave = half_day_leave_count,
+        lateness = lateness_count,
+        earlyLeave = early_leave_count,
+        absence = absence_count
+    WHERE employeeCode = NEW.employeeCode;
+END;
+//
+
+
+CREATE TRIGGER after_attendance_update
+AFTER UPDATE ON attendance
+FOR EACH ROW
+BEGIN
+    DECLARE total_work_count INT DEFAULT 0;
+    DECLARE attendance_count INT DEFAULT 0;
+    DECLARE businesstrip_count INT DEFAULT 0;
+    DECLARE outsidework_count INT DEFAULT 0;
+    DECLARE vacation_count DOUBLE DEFAULT 0.0;
+    DECLARE monthly_leave_count INT DEFAULT 0;
+    DECLARE half_day_leave_count INT DEFAULT 0;
+    DECLARE lateness_count INT DEFAULT 0;
+    DECLARE early_leave_count INT DEFAULT 0;
+    DECLARE absence_count INT DEFAULT 0;
+
+    -- attendance 테이블에서 각 상태의 개수를 계산
+    SELECT 
+        SUM(CASE WHEN status = '출근' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '출장' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '외근' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '월차' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '반차' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '지각' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '조퇴' THEN 1 ELSE 0 END),
+        SUM(CASE WHEN status = '결근' THEN 1 ELSE 0 END)
+    INTO
+        attendance_count,
+        businesstrip_count,
+        outsidework_count,
+        monthly_leave_count,
+        half_day_leave_count,
+        lateness_count,
+        early_leave_count,
+        absence_count
+    FROM attendance
+    WHERE employeeCode = NEW.employeeCode;
+
+    SET total_work_count = attendance_count + businesstrip_count + outsidework_count +early_leave_count +lateness_count ;
+    SET vacation_count = monthly_leave_count + half_day_leave_count/2;
+
+    -- totalattendance 테이블 업데이트
+    UPDATE totalattendance
+    SET
+        totalWorkCount = total_work_count,
+        attendanceCount = attendance_count,
+        businesstripCount = businesstrip_count,
+        outsideWorkCount = outsidework_count,
+        vacation = vacation_count,
+        monthlyLeave = monthly_leave_count,
+        halfDayLeave = half_day_leave_count,
+        lateness = lateness_count,
+        earlyLeave = early_leave_count,
+        absence = absence_count
+    WHERE employeeCode = NEW.employeeCode;
+END;
+//
+
+DELIMITER ;
+
 
 select * from attendance;
 select * from hrinformation;
